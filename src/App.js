@@ -1,36 +1,20 @@
 import React, { Component } from 'react'
-import EmojiGrid from './Components/EmojiGrid'
+import {
+  BrowserRouter as Router,
+  Route, Switch
+} from 'react-router-dom'
+import TeamPage from './containers/TeamPage'
 
 class App extends Component {
-  state = {
-    emojis: [
-      {icon: '😱', isCompleted: false},
-      {icon: '🤠', isCompleted: false},
-      {icon: '🙄', isCompleted: false},
-      {icon: '👽', isCompleted: false},
-      {icon: '😡', isCompleted: false},
-      {icon: '🎃', isCompleted: false},
-      {icon: '💩', isCompleted: false},
-      {icon: '🤖', isCompleted: false},
-      {icon: '🐼', isCompleted: false},
-      {icon: '🌚', isCompleted: false},
-      {icon: '🌍', isCompleted: false},
-      {icon: '🌈', isCompleted: false},
-      {icon: '☃️', isCompleted: false},
-      {icon: '🥐', isCompleted: false},
-      {icon: '🍩', isCompleted: false}]
-  }
-  handleClick = () => {
-    console.log('clicked!')
-  }
-
   render () {
-    const {emojis} = this.state
-
     return (
-      <section>
-        <EmojiGrid emojis={emojis} onEmojiClick={this.handleClick}/>
-      </section>
+      <Router>
+        <main className="App">
+          <Switch>
+            <Route exact path="/" component={TeamPage}/>
+          </Switch>
+        </main>
+      </Router>
     )
   }
 }
