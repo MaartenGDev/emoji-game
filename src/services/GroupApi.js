@@ -1,12 +1,16 @@
 import Request from '../helpers/Request'
 
 class GroupApi {
-  static endPoint = 'http://emoji-api.dev'
+  static endPoint = 'https://emoji-api.maartendev.me'
 
   static all () {
     return new Promise((res, rej) => {
       Request.getJson(`${GroupApi.endPoint}/api/v1/groups`)
-        .then(response => res(response.data))
+        .then(response => {
+          localStorage.setItem('GroupApiCache', JSON.stringify(response.data))
+          res(response.data)
+        })
+        .catch(x => res(JSON.parse(localStorage.getItem('GroupApiCache'))))
     })
   }
 
@@ -32,7 +36,7 @@ class GroupApi {
     })
   }
 
-  static destroy(group){
+  static destroy (group) {
     return new Promise((res, rej) => {
       Request.destroyJson(`${GroupApi.endPoint}/api/v1/groups/${group.id}`)
         .then(response => res(response.data))

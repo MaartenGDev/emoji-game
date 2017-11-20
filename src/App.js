@@ -4,6 +4,7 @@ import {
   Route, Switch
 } from 'react-router-dom'
 import TeamPage from './containers/TeamPage'
+import TeamTaskPage from './containers/TeamTaskPage'
 
 class App extends Component {
   render () {
@@ -12,6 +13,8 @@ class App extends Component {
         <main className="App">
           <Switch>
             <Route exact path="/" component={TeamPage}/>
+            <Route exact path="/groups/:id" component={TeamPage}/>
+            <Route exact path="/groups/:id/tasks/:taskId" component={TeamTaskPage}/>
           </Switch>
         </main>
       </Router>
