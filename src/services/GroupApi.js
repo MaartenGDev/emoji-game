@@ -1,7 +1,7 @@
 import Request from '../helpers/Request'
 
 class GroupApi {
-  static endPoint = 'http://emoji-api.dev'
+  static endPoint = 'https://emoji-api.maartendev.me/'
 
   static all () {
     return new Promise((res, rej) => {

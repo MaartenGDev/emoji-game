@@ -53,8 +53,6 @@ class TeamPage extends Component {
       }]
     }, [])
 
-    console.log(awardedScores)
-
     return (
       <section>
         <section className="bg-white shadow-md rounded p-4">
