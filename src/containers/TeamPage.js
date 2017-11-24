@@ -19,9 +19,12 @@ class TeamPage extends Component {
   }
 
   handleTeamChange = e => {
+    const selectedGroup = this.state.groups.find(x => x.id === parseInt(e.target.value, 10));
     this.setState({
-      selectedGroup: this.state.groups.find(x => x.id === parseInt(e.target.value, 10))
+      selectedGroup
     })
+
+    this.props.history.push(`/groups/${selectedGroup.id}`)
   }
 
   handleTaskClick = (task) => {

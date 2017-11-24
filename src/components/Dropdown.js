@@ -5,7 +5,7 @@ const Dropdown = ({options, selectedValue, onChange}) => {
   return (
     <section>
       <label htmlFor="teamPicker" className="hidden">Team</label>
-      <select onChange={onChange} defaultValue={selectedValue} id="teamPicker"
+      <select onChange={onChange} value={selectedValue} id="teamPicker"
               className="block appearance-none w-full bg-grey-lighter border border-grey-lighter text-grey-darker py-3 px-4 pr-8 rounded">
         {options.map(({value, label}, index) => <option key={value} value={value}>{label}</option>)}
       </select>
