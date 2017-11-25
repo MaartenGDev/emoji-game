@@ -1,1 +1,1 @@
-export const API_ENDPOINT = 'http://emoji-api.dev/api/v1'
+export const API_ENDPOINT = 'https://emoji-api.maartendev.me/api/v1'
