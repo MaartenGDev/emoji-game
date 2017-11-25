@@ -1,11 +1,10 @@
 import Request from '../helpers/Request'
+import {API_ENDPOINT} from '../config'
 
 class GroupApi {
-  static endPoint = 'https://emoji-api.maartendev.me/'
-
   static all () {
     return new Promise((res, rej) => {
-      Request.getJson(`${GroupApi.endPoint}/api/v1/groups`)
+      Request.getJson(`${API_ENDPOINT}/groups`)
         .then(response => {
           localStorage.setItem('GroupApiCache', JSON.stringify(response.data))
           res(response.data)
@@ -22,7 +21,7 @@ class GroupApi {
 
   static store (group) {
     return new Promise((res, rej) => {
-      Request.postJson(`${GroupApi.endPoint}/api/v1/groups`, group)
+      Request.postJson(`${API_ENDPOINT}/groups`, group)
         .then(response => res(response.data))
         .catch(err => rej(err))
     })
@@ -30,7 +29,7 @@ class GroupApi {
 
   static update (group) {
     return new Promise((res, rej) => {
-      Request.patchJson(`${GroupApi.endPoint}/api/v1/groups/${group.id}`, group)
+      Request.patchJson(`${API_ENDPOINT}/groups/${group.id}`, group)
         .then(response => res(response.data))
         .catch(err => rej(err))
     })
@@ -38,7 +37,7 @@ class GroupApi {
 
   static destroy (group) {
     return new Promise((res, rej) => {
-      Request.destroyJson(`${GroupApi.endPoint}/api/v1/groups/${group.id}`)
+      Request.destroyJson(`${API_ENDPOINT}/groups/${group.id}`)
         .then(response => res(response.data))
         .catch(err => rej(err))
     })

@@ -3,19 +3,23 @@ class ScoreVisualizerService {
     return [
       {
         value: 1,
-        label: '🥇 1st'
+        icon: '🥇',
+        label: '1st'
       },
       {
         value: 2,
-        label: '🥈 2nd',
+        icon: '🥈',
+        label: '2nd',
       },
       {
         value: 3,
-        label: '🥉 3rd',
+        icon: '🥉',
+        label: '3rd',
       },
       {
         value: 4,
-        label: '💩 You tried'
+        icon: '💩',
+        label: 'You tried'
       }
     ]
   }

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import ScoreVisualizerService from '../services/ScoreVisualizerService'
 
 const TaskGrid = ({tasks, onTaskClick}) => {
   return (
@@ -14,20 +15,11 @@ const TaskGrid = ({tasks, onTaskClick}) => {
           {icon}
           {isCompleted &&
           <span className="absolute inline-block"
-                style={{right: '5px', bottom: '5px'}}>{getScoreRepresentation(position)}</span>}
+                style={{right: '5px', bottom: '5px'}}>{ScoreVisualizerService.getScoreForPosition(position).icon}</span>}
         </section>
       })}
     </section>
   )
-}
-
-const getScoreRepresentation = position => {
-  switch (position){
-    case 1: return '🥇';
-    case 2: return '🥈';
-    case 3: return '🥉';
-    default: return '🏆';
-  }
 }
 
 TaskGrid.propTypes = {

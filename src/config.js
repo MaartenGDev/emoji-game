@@ -1,0 +1,1 @@
+export const API_ENDPOINT = 'http://emoji-api.dev/api/v1'

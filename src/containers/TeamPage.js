@@ -46,12 +46,13 @@ class TeamPage extends Component {
 
       const count = (acc.find(x => x.position === task.position) || {position: 0}).position + 1
 
+      const scoreForPosition = ScoreVisualizerService.getScoreForPosition(task.position);
       return [...acc.filter(x => x.position !== task.position), {
         position: task.position,
-        label: ScoreVisualizerService.getScoreForPosition(task.position).label,
+        label: `${scoreForPosition.icon} ${scoreForPosition.label}`,
         count
       }]
-    }, [])
+    }, []).sort((a, b) => a.position - b.position)
 
     return (
       <section>
