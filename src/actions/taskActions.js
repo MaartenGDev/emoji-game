@@ -33,9 +33,11 @@ export const updateTask = task => {
   return async dispatch => {
     return taskApi.createOrUpdate(task)
       .then(savedTask => {
+        const providedTaskWithPossibleNewId = {...task, id: (savedTask !== undefined ? savedTask.id : task.id )}
+
         task.id === undefined
-          ? dispatch(createTaskSuccess(savedTask))
-          : dispatch(updateTaskSuccess(savedTask))
+          ? dispatch(createTaskSuccess(providedTaskWithPossibleNewId))
+          : dispatch(updateTaskSuccess(providedTaskWithPossibleNewId))
       })
   }
 }
