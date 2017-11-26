@@ -1,11 +1,11 @@
 import { API_ENDPOINT } from '../config'
 import RestApi from './RestApi'
 
-class GroupApi extends RestApi {
+class TaskApi extends RestApi {
   constructor(){
-    super(API_ENDPOINT, 'groups')
+    super(API_ENDPOINT, 'tasks')
   }
 }
 
 
-export default GroupApi
+export default TaskApi

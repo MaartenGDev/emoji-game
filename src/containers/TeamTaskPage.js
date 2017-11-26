@@ -56,12 +56,14 @@ const buildTask = group => ({
 })
 
 const mapStateToProps = (state, ownProps) => {
+  const {groups, tasks} = state;
+
   const {id, taskId} = ownProps.match.params
-  const group = state.groups.find(x => x.id === parseInt(id, 10))
+  const group = groups.find(x => x.id === parseInt(id, 10))
 
   const task = group === undefined
     ? undefined
-    : group.tasks.find(x => x.id === parseInt(taskId, 10))
+    : tasks.filter(x => x.group_id === group.id).find(x => x.id === parseInt(taskId, 10))
 
   return {
     group,

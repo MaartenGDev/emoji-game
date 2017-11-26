@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import * as groupActions from '../actions/groupActions'
+import * as taskActions from '../actions/taskActions'
 import { bindActionCreators } from 'redux'
 import Dropdown from '../components/Dropdown'
 import ScoreVisualizerService from '../services/ScoreVisualizerService'
-import Request from '../helpers/Request'
-import { API_ENDPOINT } from '../config'
 
 class ManageTeamPage extends Component {
   state = {
     groups: this.props.groups,
+    tasks: this.props.tasks,
     selectedGroup: this.props.selectedGroup,
     selectedTask: this.props.selectedTask,
     selectedScore: this.props.selectedScore,
@@ -19,6 +18,7 @@ class ManageTeamPage extends Component {
   componentWillReceiveProps (nextProps) {
     this.setState({
       groups: nextProps.groups,
+      tasks: nextProps.tasks,
       selectedGroup: nextProps.selectedGroup,
       selectedTask: nextProps.selectedTask,
       selectedScore: nextProps.selectedScore,
@@ -28,12 +28,9 @@ class ManageTeamPage extends Component {
 
   updateTaskStatusForTeam = () => {
     const {selectedTask, selectedScore, form} = this.state
+    const position = selectedScore.value;
 
-    Request.patchJson(`${API_ENDPOINT}/tasks/${selectedTask.id}`, {
-      position: selectedScore.value,
-      token: form.token
-    })
-      .then(res => console.log(res))
+    this.props.actions.updateTask({...selectedTask, ...{position, token: form.token}})
   }
 
   navigateToSelectedGroupHome = () => {
@@ -43,14 +40,19 @@ class ManageTeamPage extends Component {
   }
 
   handleTeamChange = e => {
-    const selectedGroup = this.state.groups.find(x => x.id === parseInt(e.target.value, 10))
-    const selectedTask = selectedGroup.tasks[0]
+    const {groups, tasks} = this.state
+    const selectedGroup = groups.find(x => x.id === parseInt(e.target.value, 10))
+    const tasksForSelectedGroup = tasks.filter(x => x.group_id === selectedGroup.id)
+
+    const selectedTask = tasksForSelectedGroup[0]
 
     this.setState({selectedGroup, selectedTask})
   }
 
   handleTaskChange = e => {
-    const selectedTask = this.state.selectedGroup.tasks.find(x => x.id === parseInt(e.target.value, 10))
+    const {selectedGroup, tasks} = this.state
+    const tasksForSelectedGroup = tasks.filter(x => x.group_id === selectedGroup.id)
+    const selectedTask = tasksForSelectedGroup.find(x => x.id === parseInt(e.target.value, 10))
     const selectedScore = ScoreVisualizerService.getScoreForPosition(selectedTask.position) || {value: -1}
 
     this.setState({selectedTask, selectedScore})
@@ -75,10 +77,10 @@ class ManageTeamPage extends Component {
   }
 
   render () {
-    const {groups, selectedGroup, selectedTask, selectedScore, form} = this.state
+    const {groups, tasks, selectedGroup, selectedTask, selectedScore, form} = this.state
     const options = groups.map(({id, name}) => ({value: id, label: name}))
 
-    const tasksForSelectedGroup = selectedGroup.tasks.map(({id, icon, title}) => ({
+    const tasksForSelectedGroup = tasks.filter(x => x.group_id === selectedGroup.id).map(({id, icon, title}) => ({
       value: id,
       label: `${icon} ${title}`
     }))
@@ -101,7 +103,7 @@ class ManageTeamPage extends Component {
           <section className="flex justify-center">
             <section style={{marginTop: '-80px', padding: '30px'}}>
               <span className="inline-block p-8 bg-white shadow-md"
-                    style={{ borderRadius: '50px', fontSize: '35px' }} role="img" aria-label="Admin settings">🔮</span>
+                    style={{borderRadius: '50px', fontSize: '35px'}} role="img" aria-label="Admin settings">🔮</span>
             </section>
           </section>
 
@@ -159,19 +161,22 @@ class ManageTeamPage extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const groups = state.groups || []
+  const {groups, tasks} = state
   const {id} = ownProps.match.params
 
   const selectedGroup = (id !== undefined && groups.length)
     ? groups.find(x => x.id === parseInt(id, 10))
     : groups[0] || {id: -1, tasks: []}
 
-  const selectedTask = selectedGroup.tasks.length > 0
-    ? selectedGroup.tasks[0]
+  const tasksForSelectedGroup = tasks.filter(x => x.group_id === selectedGroup.id)
+
+  const selectedTask = tasksForSelectedGroup.length > 0
+    ? tasksForSelectedGroup[0]
     : {id: -1, position: -1}
 
   return {
-    groups: groups,
+    groups,
+    tasks,
     selectedGroup,
     selectedTask,
     selectedScore: ScoreVisualizerService.getScoreForPosition(selectedTask.position) || {value: -1},
@@ -182,7 +187,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(groupActions, dispatch)
+  actions: bindActionCreators(taskActions, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageTeamPage)

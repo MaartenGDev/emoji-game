@@ -1,6 +1,8 @@
 import { LOAD_GROUPS, ADD_GROUP, UPDATE_GROUP, DESTROY_GROUP } from './groupTypes'
 import GroupApi from '../services/GroupApi'
 
+const groupApi = new GroupApi();
+
 export const createGroupSuccess = group => ({
   type: ADD_GROUP,
   group
@@ -22,14 +24,14 @@ export const loadGroupsSuccess = groups => ({
 
 export const loadGroups = () => {
   return async dispatch => {
-    return GroupApi.all()
+    return groupApi.all()
       .then(groups => dispatch(loadGroupsSuccess(groups)))
   }
 }
 
 export const updateGroup = group => {
   return async dispatch => {
-    return GroupApi.createOrUpdate(group)
+    return groupApi.createOrUpdate(group)
       .then(savedGroup => {
         const providedGroupWithPossibleNewId = {...group, id: savedGroup.id};
         group.id === undefined
@@ -41,7 +43,7 @@ export const updateGroup = group => {
 
 export const destroyGroup = group => {
   return async dispatch => {
-    return GroupApi.destroy(group)
+    return groupApi.destroy(group)
       .then(res => dispatch(destroyGroupSuccess(group)))
   }
 }

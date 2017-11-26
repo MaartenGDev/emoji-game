@@ -7,9 +7,12 @@ import registerServiceWorker from './registerServiceWorker';
 import { loadGroups } from './actions/groupActions'
 import './App.css'
 import './index.min.css'
+import { loadTasks } from './actions/taskActions'
 
 const store = configureStore();
+store.dispatch(loadTasks())
 store.dispatch(loadGroups())
+
 
 ReactDOM.render(
   <Provider store={store}>

@@ -9,12 +9,14 @@ import ScoreVisualizerService from '../services/ScoreVisualizerService'
 class TeamPage extends Component {
   state = {
     groups: this.props.groups,
+    tasks: this.props.tasks,
     selectedGroup: this.props.selectedGroup
   }
 
   componentWillReceiveProps (nextProps) {
     this.setState({
       groups: nextProps.groups,
+      tasks: nextProps.tasks,
       selectedGroup: nextProps.selectedGroup
     })
   }
@@ -28,25 +30,25 @@ class TeamPage extends Component {
     this.props.history.push(`/groups/${selectedGroup.id}`)
   }
 
-  handleTaskClick = (task) => {
+  handleTaskClick = task => {
     const {selectedGroup} = this.state
 
     this.props.history.push(`/groups/${selectedGroup.id}/tasks/${task.id}`)
   }
 
   render () {
-    const {groups, selectedGroup} = this.state
+    const {groups, tasks, selectedGroup} = this.state
     const options = groups.map(({id, name}) => ({value: id, label: name}))
 
-    const hasSelectedGroup = selectedGroup.tasks.length > 0
-    const tasksForSelectedGroup = selectedGroup.tasks
+    const tasksForSelectedGroup = tasks.filter(x => x.group_id === selectedGroup.id)
+    const hasTasksForSelectedGroup = tasksForSelectedGroup.length > 0
 
-    const awardedScores = selectedGroup.tasks.reduce((acc, task) => {
+    const awardedScores = tasksForSelectedGroup.reduce((acc, task) => {
       if (task.position === null) return acc
 
       const count = (acc.find(x => x.position === task.position) || {position: 0}).position + 1
 
-      const scoreForPosition = ScoreVisualizerService.getScoreForPosition(task.position);
+      const scoreForPosition = ScoreVisualizerService.getScoreForPosition(task.position)
       return [...acc.filter(x => x.position !== task.position), {
         position: task.position,
         label: `${scoreForPosition.icon} ${scoreForPosition.label}`,
@@ -75,14 +77,14 @@ class TeamPage extends Component {
             })}
           </div>
         </section>
-        {hasSelectedGroup && <TaskGrid tasks={tasksForSelectedGroup} onTaskClick={this.handleTaskClick}/>}
+        {hasTasksForSelectedGroup && <TaskGrid tasks={tasksForSelectedGroup} onTaskClick={this.handleTaskClick}/>}
       </section>
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const groups = state.groups || []
+  const {groups, tasks} = state
   const {id} = ownProps.match.params
 
   const selectedGroup = (id !== undefined && groups.length)
@@ -91,6 +93,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     groups: groups,
+    tasks,
     selectedGroup
   }
 }
