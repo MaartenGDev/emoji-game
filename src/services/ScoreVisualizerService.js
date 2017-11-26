@@ -18,7 +18,7 @@ class ScoreVisualizerService {
       },
       {
         value: 4,
-        icon: '💩',
+        icon: '🏅',
         label: 'You tried'
       }
     ]
